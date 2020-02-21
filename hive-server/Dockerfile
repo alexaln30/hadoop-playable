@@ -60,6 +60,9 @@ RUN apt-get update && apt-get install -y wget procps && \
 #COPY startup.sh /usr/local/bin/
 #RUN chmod +x /usr/local/bin/startup.sh
 
+COPY startup.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/startup.sh
+
 COPY entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
@@ -67,4 +70,4 @@ EXPOSE 10000
 EXPOSE 10002
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["/bin/bash"]
+CMD startup.sh
