@@ -97,7 +97,7 @@ services:
       - ./hadoop.env
       
   hive-server:
-    image: hive-server:10 #bde2020/hive:2.3.2-postgresql-metastore
+    image: hive-server:1 #bde2020/hive:2.3.2-postgresql-metastore
     container_name: hive
     env_file:
       - ./hadoop.env
