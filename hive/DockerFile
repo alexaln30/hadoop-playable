@@ -1,7 +1,25 @@
-FROM bde2020/hadoop-base:2.0.0-hadoop2.7.4-java8
+FROM bde2020/hadoop-base:2.0.0-hadoop3.2.1-java8
 
 MAINTAINER Yiannis Mouchakis <gmouchakis@iit.demokritos.gr>
 MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
+
+RUN apt-get update && apt-get install -y wget && apt-get install -y vim && \
+	wget http://archive.apache.org/dist/sqoop/1.4.5/sqoop-1.4.5.bin__hadoop-2.0.4-alpha.tar.gz && \
+	wget https://github.com/microsoft/mssql-jdbc/releases/download/v8.2.0/mssql-jdbc-8.2.0.jre8.jar && \
+	tar xzf sqoop-1.4.5.bin__hadoop-2.0.4-alpha.tar.gz && \
+	mv sqoop-1.4.5.bin__hadoop-2.0.4-alpha /usr/lib/sqoop && \
+	mv /usr/lib/sqoop/conf/sqoop-env-template.sh /usr/lib/sqoop/conf/sqoop-env.sh && \
+	mv mssql-jdbc-8.2.0.jre8.jar /usr/lib/sqoop/lib && \
+	rm sqoop-1.4.5.bin__hadoop-2.0.4-alpha.tar.gz && \
+    echo "export SQOOP_HOME=/usr/lib/sqoop"  >> ~/.bashrc && \
+    echo "export PATH=$PATH:/usr/lib/sqoop/bin" >> ~/.bashrc && \
+    echo "export HADOOP_COMMON_HOME=/opt/hadoop-3.2.1" >> /usr/lib/sqoop/conf/sqoop-env.sh && \
+    echo "export HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1" >> /usr/lib/sqoop/conf/sqoop-env.sh && \
+
+#	echo "export HADOOP_COMMON_HOME=/opt/hadoop-3.2.1" >> ~/.bashrc && \
+#	echo "export HADOOP_MAPRED_HOME=/opt/hadoop-3.2.1" >> ~/.bashrc && \
+#	apt-get --purge remove -y wget && \
+	apt-get clean
 
 # Allow buildtime config of HIVE_VERSION
 ARG HIVE_VERSION
@@ -26,7 +44,6 @@ RUN apt-get update && apt-get install -y wget procps && \
 	apt-get --purge remove -y wget && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
-
 
 #Spark should be compiled with Hive to be able to use it
 #hive-site.xml should be copied to $SPARK_HOME/conf folder

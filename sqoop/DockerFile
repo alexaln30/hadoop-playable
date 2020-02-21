@@ -1,13 +1,11 @@
-FROM bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+FROM bde2020/hadoop-base:2.0.0-hadoop3.2.1-java8
 
+MAINTAINER Gabriel Oliveira KKKKKKKKKK
 MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
 
-HEALTHCHECK CMD curl -f http://localhost:9870/ || exit 1
+# Allow buildtime config of HIVE_VERSION
 
-ENV HDFS_CONF_dfs_namenode_name_dir=file:///hadoop/dfs/name
-RUN mkdir -p /hadoop/dfs/name
-VOLUME /hadoop/dfs/name
-VOLUME /opt/hadoop3.2.1
+
 
 #Install Sqoop
 RUN apt-get update && apt-get install -y wget && apt-get install -y vim && \
@@ -28,9 +26,16 @@ RUN apt-get update && apt-get install -y wget && apt-get install -y vim && \
 #	apt-get --purge remove -y wget && \
 	apt-get clean
 
-ADD run.sh /run.sh
-RUN chmod a+x /run.sh
 
-EXPOSE 9870
 
-CMD ["/run.sh"]
+#COPY startup.sh /usr/local/bin/
+#RUN chmod +x /usr/local/bin/startup.sh
+
+#COPY entrypoint.sh /usr/local/bin/
+#RUN chmod +x /usr/local/bin/entrypoint.sh
+
+#EXPOSE 56009
+
+#ENTRYPOINT ["entrypoint.sh"]
+#CMD ["bash"]
+CMD ["/bin/bash"]
